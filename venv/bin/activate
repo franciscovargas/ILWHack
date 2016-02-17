@@ -39,7 +39,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/afs/inf.ed.ac.uk/user/s12/s1235260/ILWHack/pelican-blueidea/venv"
+VIRTUAL_ENV="/afs/inf.ed.ac.uk/user/s12/s1235260/ILWHack/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

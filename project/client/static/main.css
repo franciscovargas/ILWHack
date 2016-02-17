@@ -21,6 +21,9 @@ h1{
   right: 100%
 }
 
+#badcode{
+  display: none;
+}
 
 body {
   padding-top: 51px;

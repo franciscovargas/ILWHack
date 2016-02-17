@@ -1,4 +1,4 @@
-#!/afs/inf.ed.ac.uk/user/s12/s1235260/ILWHack/pelican-blueidea/venv/bin/python
+#!/afs/inf.ed.ac.uk/user/s12/s1235260/ILWHack/venv/bin/python
 # EASY-INSTALL-ENTRY-SCRIPT: 'Mako==1.0.3','console_scripts','mako-render'
 __requires__ = 'Mako==1.0.3'
 import sys

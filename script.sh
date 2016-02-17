@@ -1,3 +1,4 @@
+export APP_SETTINGS="project.server.config.DevelopmentConfig"
 rm project/server/dev.sqlite
 rm -rf migrations
 python manage.py create_db
