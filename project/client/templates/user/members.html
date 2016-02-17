@@ -1,0 +1,59 @@
+{% extends "_base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+  <h1>Welcome, <em>{{ current_user.email }}</em>!</h1>
+  <h3> Rank a purchased product ? </h3>
+  <form id="x" class="form" role="form" method="post" action="">
+
+    {{ form.csrf_token }}
+    {{ form.hidden_tag() }}
+    {{ wtf.form_errors(form, hiddens="only") }}
+
+
+    <div class="col-lg-4 col-sm-4">
+
+      {{ wtf.form_field(form.prod) }}
+      {{ wtf.form_field(form.rank) }}
+
+      <button class="btn btn-success" type="submit">Rank Product</button>
+
+  </form>
+
+
+
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a href="#">
+                    Information
+                </a>
+            </li>
+            <li>
+                <a href="#">Top Products</a>
+            </li>
+            <li>
+                <a href="#">Statistics</a>
+            </li>
+
+        </ul>
+    </div>
+
+
+    <div class="container">
+      <div class="row row-offcanvas row-offcanvas-left">
+
+        <!-- sidebar -->
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#">Link 1</a></li>
+              <li><a href="#">Link 2</a></li>
+              <li><a href="#">Link 3</a></li>
+            </ul>
+        </div>
+
+
+
+
+{% endblock %}

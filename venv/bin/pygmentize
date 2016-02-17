@@ -1,0 +1,10 @@
+#!/afs/inf.ed.ac.uk/user/s12/s1235260/ILWHack/pelican-blueidea/venv/bin/python
+# EASY-INSTALL-ENTRY-SCRIPT: 'Pygments==2.1.1','console_scripts','pygmentize'
+__requires__ = 'Pygments==2.1.1'
+import sys
+from pkg_resources import load_entry_point
+
+if __name__ == '__main__':
+    sys.exit(
+        load_entry_point('Pygments==2.1.1', 'console_scripts', 'pygmentize')()
+    )

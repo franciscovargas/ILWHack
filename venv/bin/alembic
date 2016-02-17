@@ -1,0 +1,10 @@
+#!/afs/inf.ed.ac.uk/user/s12/s1235260/ILWHack/pelican-blueidea/venv/bin/python
+# EASY-INSTALL-ENTRY-SCRIPT: 'alembic==0.8.4','console_scripts','alembic'
+__requires__ = 'alembic==0.8.4'
+import sys
+from pkg_resources import load_entry_point
+
+if __name__ == '__main__':
+    sys.exit(
+        load_entry_point('alembic==0.8.4', 'console_scripts', 'alembic')()
+    )
