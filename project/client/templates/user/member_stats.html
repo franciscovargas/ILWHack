@@ -31,14 +31,14 @@
 
 <button type="button" class="btn btn-primary" onclick=$('#mygraph2').hide();$('#mygraph1').show() >Primary</button>
 
-<p> Change the bubble density </p>
+<!-- <p> Change the bubble density </p>
     <form name="color_button" method='GET'>
 
         Density:
         <input type="text" name="to" value="{{ to }}">
         <br>
         <button type="submit">Submit</button>
-    </form>
+    </form> -->
     <div id="mygraph1" >
     {{ plot_div|indent(4)|safe }}
    </div>
