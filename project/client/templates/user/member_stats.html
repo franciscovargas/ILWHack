@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+  <h1>Welcome, <em>{{ current_user.email }}</em>!</h1>
+  <h3> Purchase leader board </h3>
+  <table class="table">
+    <tbody>
+      {% for row in x %}
+          <tr>
+            <td>{{ row[0]|tojson|safe }}</td>
+            <td>{{ row[1] }}</td>
+          </tr>
+      {% endfor %}
+   </tbody>
+
+ </table>
+
+
+
+ {{ js_resources|indent(4)|safe }}
+
+ {{ css_resources|indent(4)|safe }}
+
+ {{ plot_script|indent(4)|safe }}
+ {{ plot_script2|indent(4)|safe }}
+
+
+
+<button type="button" class="btn btn-primary" onclick="$('#mygraph1').hide();$('#mygraph2').show()">Secondary</button>
+
+<button type="button" class="btn btn-primary" onclick=$('#mygraph2').hide();$('#mygraph1').show() >Primary</button>
+
+<p> Change the bubble density </p>
+    <form name="color_button" method='GET'>
+
+        Density:
+        <input type="text" name="to" value="{{ to }}">
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="mygraph1" >
+    {{ plot_div|indent(4)|safe }}
+   </div>
+    <div id="mygraph2" style="display:none;">
+      {{ plot_div2|indent(4)|safe }}
+    </div>
+
+
+  </body>
+
+
+{% endblock %}

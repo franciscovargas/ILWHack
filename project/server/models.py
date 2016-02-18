@@ -11,8 +11,8 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.Unicode(255), unique=True, nullable=False)
+    password = db.Column(db.Unicode(255), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
 
@@ -61,18 +61,37 @@ class Product(db.Model):
     __tablename__ = "prodcut"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    registered_on = db.Column(db.DateTime, nullable=False)
-    name = db.Column(db.String(255), unique=True, nullable=False)
+    sku = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.Unicode(64), unique=False, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    category = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.Unicode(64), nullable=False)
+    brand = db.Column(db.Unicode(64), nullable=False)
+    image_url = db.Column(db.Unicode(64), nullable=False)
+    url = db.Column(db.Unicode(64), nullable=False)
+    manu = db.Column(db.Unicode(64), nullable=False)
+    mindev = db.Column(db.Integer, nullable=False)
+    maxdev = db.Column(db.Integer, nullable=False)
+    discount = db.Column(db.Integer, nullable=False)
+    shipping = db.Column(db.Integer, nullable=False)
 
 
-    def __init__(self, registered_on, name, price, category):
-        self.registered_on = registered_on
+
+    def __init__(self, sku, category, brand, name, image_url,
+                 url, price, manu,  shipping, mindev, maxdev,
+                 discount):
         self.name = name
         self.price = price
         self.category = category
-        self.registered_on = datetime.datetime.now()
+        self.brand = brand
+        self.image_url = image_url
+        self.url = url
+        self.manu = manu
+        self.mindev = mindev
+        self.maxdev = maxdev
+        self.discount = discount
+        self.shipping = shipping
+        self.sku = sku
+
 
 
 
@@ -89,14 +108,19 @@ class Products(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # registered_on = db.Column(db.DateTime, nullable=False)
-    pro_id = db.Column(db.Integer, db.ForeignKey(Product.id),
-                       unique=False, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id),
-                        unique=False, nullable=False)
+    sku = db.Column(db.Integer,db.ForeignKey(Product.sku), nullable=False)
+    email = db.Column(db.Unicode(255), db.ForeignKey(User.email))
+    name = db.Column(db.Unicode(64), nullable=False)
+    sname = db.Column(db.Unicode(64), nullable=False)
+    sat = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, pro_id, user_id):
-        self.pro_id = pro_id
-        self.user_id = user_id
+
+    def __init__(self, sku, email, name, sname, sat):
+        self.sku = sku
+        self.email = email
+        self.name = name
+        self.sname = sname
+        self.sat = sat
 
     def get_id(self):
         return self.id
