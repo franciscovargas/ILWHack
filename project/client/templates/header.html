@@ -12,12 +12,31 @@
         </button>
           <a class="navbar-brand" href="{{ url_for('main.home') }}">Product Recommender</a>
       </div>
+
+
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+
+
         <ul class="nav navbar-nav">
           <li><a href="{{ url_for('main.about') }}">About</a></li>
+
+<!--dropdown button menu--
+<div class="dropdown">
+  <button class="dropbtn">Dropdown</button>
+  <div class="dropdown-content">
+    <a href="#">Link 1</a>
+    <a href="#">Link 2</a>
+    <a href="#">Link 3</a>
+  </div>
+</div>
+
+-->
+
           {% if current_user.is_authenticated %}
            <li><a href="{{ url_for('user.members') }}">Members</a></li>
+            <li><a href="/members/stats">Stats</a></li>
           {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -33,3 +52,4 @@
     <!-- /.container -->
   </nav>
 </header>
+
