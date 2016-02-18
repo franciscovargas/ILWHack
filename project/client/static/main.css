@@ -11,22 +11,150 @@
  */
 
 /* Toggle Styles */
+* {
+  color: white;
+}
 #x{
   left : 100%;
 }
 h1{
+
+  color: white;
   right : 100%
+
+}
+.about-content{
+  position: absolute;
+padding: 20px;
+ width: 800px;
+  float: right;
+  colour:white;
+  text-align: left;
+
+}
+p1.about-content{
+  position: absolute;
+  float: left;
+
+}
+/*--stuffff----dropdownbutton-menu*/
+#products-top{
+  color: blue;
+  font-size:
+}
+div.recomended products images{
+  position: absolute;
+  width: 70%;
+
+
+}
+.desc{
+  padding: 10px;
+}
+div.img {
+    margin: 10px;
+    border: 1px solid #ccc;
+    float: left;
+    width: 180px;
+    height: 180px;
+}
+
+div.img:hover {
+    border: 1px solid #777;
+}
+
+div.img img {
+    width: 100%;
+    height: auto;
+}
+
+div.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+/* Style The Dropdown Button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position:
+
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+
+/*end-of-stuff*/
+
+
+.row row-offcanvas row-offcanvas-left{
+  position: fixed;
+  float: right;
 }
 .form{
   right: 100%
 }
+.dropdown{
+  position: absolute;
 
-#badcode{
-  display: none;
+
+
 }
 
+
+#picture{
+  background-image: url(http://www.campbellrigg.com/wp-content/themes/campbellrigg/images/nonfood/black/down-8.jpg);
+  background-size:contain;
+  background-repeat: no-repeat;
+  background-position: center;
+   position: absolute;
+    width: 600px;
+    height: 400px;
+    right: 0px;
+    bottom: 0px;
+    z-index: -2;
+}
 body {
-  padding-top: 51px;
+
+  background-color: black;
+
+
+
 }
 .text-center {
   padding-top: 20px;
@@ -43,10 +171,29 @@ body {
   width: 95%;
 }
 #sidebar li {
-  border:0 #f2f2f2 solid;
+  border:0 purple solid;
   border-bottom-width:1px;
 }
 
+a {
+    color: #8800BA;
+    text-decoration: none;
+}
+..nav > li > a:hover, .nav > li > a:focus {
+    text-decoration: none;
+
+}
+ .nav > li > a:focus {
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0);
+} .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #EEE;
+}
+a:hover, a:focus {
+    color: #FCFCFF;
+    text-decoration: underline;
+}
 /* collapsed sidebar styles */
 @media screen and (max-width: 767px) {
   .row-offcanvas {
@@ -70,14 +217,19 @@ body {
   .row-offcanvas-left.active {
     left: 41.6%;
   }
+  .nav > li > a:hover, .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #EEE;
+}
   .sidebar-offcanvas {
     position: absolute;
     top: 0;
     width: 41.6%;
   }
-  #sidebar {
-    padding-top:0;
-  }
+  #sidebar.col-xs-6 col-sm-3 sidebar-offcanvas {
+
+
+
 }
 
 
@@ -97,13 +249,16 @@ body {
 
 #sidebar-wrapper {
     /*z-index: 1000;*/
-    padding-left: 0%;
+    background-color: none;
+
     position: fixed;
-    width: 0;
-    top: 10%;
-    right: -1%;
+    float:right;
+     top: 80px;
+     right: 0;
+     width: 200px;
+     height: 100px;
     /*left: 95%;*/
-    margin-left: 0%;
+
     height: 100%;
     overflow-y: auto;
     background: #fff;
@@ -203,4 +358,10 @@ body {
         position: relative;
         margin-right: 0;
     }
+}
+footer {
+  position: absolute;
+  bottom: 20px;
+
+
 }
