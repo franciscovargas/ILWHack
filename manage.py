@@ -8,6 +8,7 @@ import coverage
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
 from pandas.compat import u
+from flask import g
 
 COV = coverage.coverage(
     branch=True,
@@ -30,7 +31,7 @@ manager = Manager(app)
 
 # migrations
 manager.add_command('db', MigrateCommand)
-
+# user = None
 
 @manager.command
 def test():
@@ -115,17 +116,29 @@ def create_data():
 
 @manager.command
 def create_data_pur():
-    init_dat = pd.read_csv("project/fakeData.csv")
+    init_dat = pd.read_csv("project/fd.csv")
+    for y in init_dat.keys():
+        try:
+            print init_dat[y]
+            init_dat[y] = map(u, init_dat[y])
+            print init_dat[y]
+        except:
+            print y
+            pass
     for x in init_dat.iterrows():
         print OrderedDict(x[1]).keys()
         db.session.add(Products(*list(OrderedDict(x[1]).values()) ))
+    db.session.commit()
 
 @manager.command
 def create_data_u():
     init_dat = pd.read_csv("project/fakeu.csv")
+    for y in init_dat.keys():
+        init_dat[y] = map(u, init_dat[y])
     for x in init_dat.iterrows():
         print OrderedDict(x[1]).keys()
         db.session.add(User(*list(OrderedDict(x[1]).values()) ))
+    db.session.commit()
 
 
 if __name__ == '__main__':
