@@ -1,4 +1,4 @@
-# ILW Hack 2016 ( Team Banitsa)
+# ILW Hack 2016 (Team Banitsa)
 
 This app was designed  with the intention of being a prototype recomender system
 for dixons carphone. The app is flask based and used the standard python
