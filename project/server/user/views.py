@@ -1,7 +1,9 @@
 # project/server/user/views.py
-from  sqlalchemy.sql.expression import func, select
-import random
-from collections import Counter
+"""
+Here be dragons... the core bulk of the app
+occurs in an unabstracted illegible fashion
+in the next lines.
+"""
 #################
 #### imports ####
 #################
@@ -15,29 +17,35 @@ from flask import g
 from project.server import bcrypt, db
 from project.server.models import User, Product, Products
 from project.server.user.forms import *
-from itertools import chain
+from ... import ml_p as mlp
+from  sqlalchemy.sql.expression import func, select
 
 from bokeh.embed import components
 from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.util.string import encode_utf8
-from ... import ml_p as mlp
+from bokeh.models import HoverTool
+
+
 import numpy as np
+import pandas as  pd
 from sklearn.neighbors import NearestNeighbors
+
+
+import random
+from collections import Counter
+from copy import deepcopy
+from collections import OrderedDict
+from itertools import chain
 ################
 #### config ####
 ################
-import pandas as  pd
-from copy import deepcopy
-from bokeh.models import HoverTool
-from collections import OrderedDict
 user_blueprint = Blueprint('user', __name__,)
 user = None
 
 ################
 #### routes ####
 ################
-
 @user_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm(request.form)
@@ -61,14 +69,13 @@ def register():
 def login():
     form = LoginForm(request.form)
     if form.validate_on_submit():
-        # global user
-        # print session
-        print form.email.data
+
         user = User.query.filter_by(email=form.email.data).first()
-        print user
-        # request.user = user
+
         if user and bcrypt.check_password_hash(
                 user.password, request.form['password']):
+            # Flask allows use of global variables
+            # here I store the user email for further queries
             session["user"] = user.__dict__["email"]
             login_user(user)
             flash('You are logged in. Welcome!', 'success')
@@ -90,125 +97,105 @@ def logout():
 @user_blueprint.route('/members')
 @login_required
 def members():
-    # print "###################"
+    # Main loged in users arival page
     form = ProductRank(request.form)
-    # print "BUG"
     return render_template('user/members.html', form=form)
 
 
 @user_blueprint.route('/members/stats')
 @login_required
 def member_stats():
-    # global user
-    # # print request.session
-    # # print g
-    # print session["user"]
-    # g.i = 2
-    graph_list = ["poly", "bokeh"]
-    Products.query.order_by(func.random())
-    Product.query.order_by(func.random())
-    User.query.order_by(func.random())
-    # vec = lambda x: [x[], x[], x[], x[]]
-    pandifycv = lambda x: pd.DataFrame(x.__dict__)[mlp.cat_vec]
-    pandifynv = lambda x: pd.DataFrame(x.__dict__)[mlp.num_vec]
+    """
+    This function carries out knn, and all the other relevant statistics + graphs
+    produced by this toool. Some optmixations should be carried out
+    and the plots should be abstracted in to their own seperate methods
+    """
+
+
+    # Panda parsers
     pandifycv2 = lambda x: pd.DataFrame(x.__dict__, index=[0])[mlp.cat_vec2]
     pandifynv2 = lambda x: list(pd.DataFrame(x.__dict__, index=[0])[mlp.num_vec2].iloc[0])
 
     out = db.session.query(Product).join(Products).join(User).filter(User.email == session["user"])
-    # print out.all()[0].__dict__
-    # cat_per_vec = deepcopy(mlp.cat_matrix)
-    # print list(pd.DataFrame(out.all()[0].__dict__, index=[0])[mlp.num_vec2].iloc[0])
-    # print pandifynv2(out.all()[0])
+
     num_per_vec = np.mean(map(pandifynv2, out.all()), axis=0)
 
-    # print num_per_vec
-    # bbbb
-    # cat_per_vec = [mlp.cat_matrix[ind] for ind  in map(pandifycv2, out.all())]
-    # per_vec = list()
-    print num_per_vec.shape
+    # Parsing the user data in to a feature vector
     for k, ind in  enumerate(map(pandifycv2, out.all())):
         cat_per_vec = deepcopy(mlp.cat_matrix)
         for i,d in enumerate(dict(ind).values()):
             cat_per_vec[i][int(list(d)[0])] = 1
+
+    # Averaging out to project the person in to product space.
     per_vec = list(np.sum(cat_per_vec, axis=0)) + list(num_per_vec)
-    # print per_vec
+
+    # for plotting purposes
     xn= per_vec[-4]
     yn =per_vec[-3]
 
-    rand = random.randrange(2000,5000)
-    out2 = db.session.query(Product).outerjoin(Products).filter(Products.email == None)[rand-1000:rand]
-    # print out2
+    # Taking a random slice of size 700 out of our  products to use as training
+    # for the recomender model
+    rand = random.randrange(700,5400)
+    out2 = db.session.query(Product).outerjoin(Products).filter(Products.email == None)[rand-700:rand]
 
+    # Ser up variables for parsing the trainign set
     cat_train = deepcopy(mlp.cat_matrix)
-    # cat_per_vec = [mlp.cat_matrix[ind] for ind  in map(pandifycv2, out.all())]
     num_train = map(pandifynv2, out2)
     train = list()
     end = enumerate(map(pandifycv2, out2)  )
-    # print out2
+
+    # Cur dictionary which is later on used as a data structure for creating
+    # plots that sumarize costs per Manufacturer.
+    # This is slow. Another aditional thing that takes place here is the collapse
+    # of the cathegorical variables in to a binary representation.
     cur = dict()
     for k, ind in  end:
         cat_train = deepcopy(mlp.cat_matrix)
-        # print ind
-        # print mlp.cat_dics
         for i,d in enumerate(dict(ind).values()):
-            # print d
             cat_train[i][int(list(d)[0])] = 1
 
-        # print mlp.cat_dics["manu"]
-        # # print int(list(ind["manu"])[0])
-        # print num_train[k][:-4]
         if mlp.cat_dics["manu"][int(list(ind["manu"])[0])] in cur:
             cur[mlp.cat_dics["manu"][int(list(ind["manu"])[0])]].append(num_train[k][1])
         else:
             cur[mlp.cat_dics["manu"][int(list(ind["manu"])[0])]] =[ num_train[k][1]]
 
         train.append(list(chain(*cat_train)) + num_train[k])
-    # print train
+
+    # K-neares neighbors object fitting on the training set (products from
+    # data base)
     nbrs = NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(train)
+    # predicting on current user who are his 5 closest prducts
     distances, indices = nbrs.kneighbors(per_vec)
-    # print indices
-    # print
-    # print out2.all()
+
+    # Formatting the prediction in to a useful html renderable form
     prediction = [(out2[ind].__dict__["name"], out2[ind].__dict__["price"], out2[ind].__dict__["url"])
                   for ind in indices[0]]
-    # print "###############"
+
+    # variable used by bokeh for tooltip lables
     labl = [out2[ind].__dict__["name"] for ind in range(len(out2))]
-    def getitem(obj, item, default):
-        if item not in obj:
-            return default
-        else:
-            return obj[item]
+
+    # Yes this is a crime
+    getitem = lambda obj, item, default: default if item not in obj else obj[item]
+
+    # price dimension of the training set
+    # max number of delivery days of the training set
     trainprice = np.array(train)[:,-4]
     trainmax = np.array(train)[:,-3]
-    x = {'products':[u'samsung 1234', u'nokia 1234', u'htc'],
-         'prices': [10, 5, 2]}
-    x1 = zip(x['products'], x['prices'])
-    colors = {
-        'Black': '#000000',
-        'Red':   '#FF0000',
-        'Green': '#00FF00',
-        'Blue':  '#0000FF',
-    }
-    args = request.args
+
+
     # Get all the form arguments in the url with defaults
-    color = colors[getitem(args, 'color', 'Black')]
+    args = request.args
     _from = int(getitem(args, '_from', 0))
     to = int(getitem(args, 'to', 10))
-    # graph = getitem(args, 'graph', 'Black')
 
-    # Create a polynomial line graph
-    N = to
-
-    x = np.random.random(size=N) * 100
-    y = np.random.random(size=N) * 100
-    radii = np.random.random(size=N) * 1.5
+    # color dict for space plot ahead
     colors = [
         "#%02x%02x%02x" % (int(r), int(g), 150) for r, g in zip(50+2*trainprice, 30+2*trainmax)
     ]
 
     TOOLS="resize,hover,crosshair,pan,wheel_zoom,box_zoom,reset,box_select,lasso_select"
 
-
+    # Data sources for the first plot
     source = ColumnDataSource(
         data=dict(
             x=trainprice,
@@ -232,19 +219,18 @@ def member_stats():
               fill_alpha=0.6, line_color=None, source=source)
     fig.square(x='x',y='y',  fill_color="yellow",size=20,
                line_color="green", source=source2)
-    # print labl
+
     hover =fig.select(dict(type=HoverTool))
     hover.tooltips = OrderedDict([
         ("label", "@label"),
     ])
-    # fig.line(trainprice,trainmax)
-    # print trainprice
-    # print trainmax
 
+    # Generation of the second plot
     plt_list = list()
     for k, v in cur.items():
-
         plt_list.append((k, np.mean(v), np.std(v)))
+
+    # Sorce data for tthe second plot
     plt_list.sort(key=lambda x: x[1])
     source3 = ColumnDataSource(
         data=dict(
@@ -262,27 +248,20 @@ def member_stats():
     hover2.tooltips = OrderedDict([
         ("label", "@label"),
     ])
-    # Configure resources to include BokehJS inline in the document.
-    # For more details see:
-    #   http://bokeh.pydata.org/en/latest/docs/reference/resources_embedding.html#bokeh-embed
+
     js_resources = INLINE.render_js()
     css_resources = INLINE.render_css()
 
-    # For more details see:
-    #   http://bokeh.pydata.org/en/latest/docs/user_guide/embedding.html#components
     script, div = components(fig, INLINE)
     script2, div2 = components(fig2, INLINE)
 
-
     return render_template('user/member_stats.html',
-                            x=x1,
                             plot_script=script,
                             plot_div=div,
                             plot_script2=script2,
                             plot_div2=div2,
                             js_resources=js_resources,
                             css_resources=css_resources,
-                            color=color,
                             _from=_from,
                             to=to,
                             prediction=prediction)

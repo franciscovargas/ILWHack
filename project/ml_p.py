@@ -2,6 +2,13 @@ import pandas as pd
 from pandas.compat import u
 from collections import OrderedDict
 
+"""
+This module acts as a container for constant variables which are
+used by pandas to ease the the parsing and processing of the data
+"""
+
+
+
 keys= [
   "Unique Id",
   "Category",

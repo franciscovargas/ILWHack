@@ -85,53 +85,54 @@ def create_admin():
 
 @manager.command
 def create_data():
-    """Creates sample data."""
+    """
+    Fills in the product table with real data that is later
+    on used to build a feature vector
+    """
     init_dat = pd.read_csv("project/test.csv")
-    # print init_dat.keys()
-    # print [mlp.keys[0] ,init_dat.keys()[0]]
-    # jdfkshfkjhfdskj
+
+    # To deal with annoying unicode bugs
     db.session.text_factory = str
+
+    # Cats stands for categorys
+    # In the next 10 lines we relable the string categorical DATA
+    #  to a numerical integer representation
     cats = map( set, dict(init_dat[mlp.cat_vec]).values())
     cat_dics = map(dict, (map(lambda x: zip(x,range(len(x))) , cats)) )
     cat_dics = OrderedDict(zip(mlp.cat_vec, cat_dics))
-    # print cat_dics
-    # print init_dat[mlp.keys]
 
+    # Remaping done with pandings to spead things up
     for y in mlp.cat:
         init_dat[y] = map(u, init_dat[y])
     for y in mlp.cat_vec:
         init_dat[y].replace(cat_dics[y], inplace=True)
 
-    print init_dat[mlp.cat_vec]
-    # bbbb
-    print "RELABLING DONE"
-    print len(mlp.keys)
-    print init_dat[mlp.keys]
-    print len(init_dat[mlp.keys])
+    # Insertions and commisions
     for x in init_dat[mlp.keys].iterrows():
-        print OrderedDict(x[1]).keys()
         db.session.add(Product(*list(OrderedDict(x[1]).values()) ))
-    print "DATA ADDED"
     db.session.commit()
 
 @manager.command
 def create_data_pur():
+    """
+    This method pulls in fake genereic purchases that we designed
+    to test and motivate our recomender system.
+    """
     init_dat = pd.read_csv("project/fd.csv")
     for y in init_dat.keys():
         try:
-            print init_dat[y]
             init_dat[y] = map(u, init_dat[y])
-            print init_dat[y]
         except:
-            print y
             pass
     for x in init_dat.iterrows():
-        print OrderedDict(x[1]).keys()
         db.session.add(Products(*list(OrderedDict(x[1]).values()) ))
     db.session.commit()
 
 @manager.command
 def create_data_u():
+    """
+    This methods adds in our fake users.
+    """
     init_dat = pd.read_csv("project/fakeu.csv")
     for y in init_dat.keys():
         init_dat[y] = map(u, init_dat[y])

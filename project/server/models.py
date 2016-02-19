@@ -5,6 +5,10 @@ import datetime
 
 from project.server import app, db, bcrypt
 
+"""
+Here is the database schema using the sqlalchemy
+ORM the code speaks for itself as a specification
+"""
 
 class User(db.Model):
 
@@ -35,22 +39,7 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
-    """
-    def get_prods(self):
-        results = (session.query(PlayerModel)
-                  .join(PlayerModel.messages)
-                  .values(PlayerModel.username,
-                          MessageModel.message,
-                          MessageModel.time))
-        # results will be a generator object
 
-        # This seems a bit convoluted, but here you go.
-        resultlist = []
-        for username, message, time in results:
-            resultlist.append({'message': message,
-                               'username': username,
-                               'time': time})
-    """
 
     def __repr__(self):
         return '<User {0}>'.format(self.email)

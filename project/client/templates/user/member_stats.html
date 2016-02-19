@@ -1,9 +1,11 @@
-{% extends "_base.html" %}
+{% extends "_base2.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block content %}
+
   <h1>Welcome, <em>{{ current_user.email }}</em>!</h1>
   <h3> Purchase leader board </h3>
+  <div class="membersbackground">
   <table class="table">
     <tbody>
       {% for row in prediction %}
@@ -30,7 +32,7 @@
 <button type="button" class="btn btn-primary" onclick="$('#mygraph1').hide();$('#mygraph2').show()">Manufacture Graph</button>
 
 <button type="button" class="btn btn-primary" onclick=$('#mygraph2').hide();$('#mygraph1').show() >Discount Graph</button>
-
+ <div class="membersbackground">
 <!-- <p> Change the bubble density </p>
     <form name="color_button" method='GET'>
 
@@ -46,7 +48,7 @@
       {{ plot_div2|indent(4)|safe }}
     </div>
 
-
+</div>
   </body>
 
 
