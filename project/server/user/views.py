@@ -219,6 +219,13 @@ def member_stats():
               fill_alpha=0.6, line_color=None, source=source)
     fig.square(x='x',y='y',  fill_color="yellow",size=20,
                line_color="green", source=source2)
+    # fig.xgrid.grid_line_color = None
+    fig.axis.major_tick_line_color = None
+    fig.axis[0].ticker.num_minor_ticks = 0
+    fig.axis[1].ticker.num_minor_ticks = 0
+    fig.outline_line_color = "white"
+    fig.xaxis.axis_line_color = "white"
+    fig.yaxis.axis_line_color = "white"
 
     hover =fig.select(dict(type=HoverTool))
     hover.tooltips = OrderedDict([
@@ -239,11 +246,44 @@ def member_stats():
             label=np.array(plt_list)[:,0]
         )
     )
+    xr = range(len(np.array(plt_list)[:,0])) + list(reversed(range(len(np.array(plt_list)[:,0]))))
+    yr = list((np.array(plt_list)[:,1].astype(float))) + list(reversed(np.array(plt_list)[:,1].astype(float) + np.array(plt_list)[:,2].astype(float)))
+
+    source4 = ColumnDataSource(
+        data=dict(
+            x=xr,
+            y= yr,
+            label=list(np.array(plt_list)[:,0])*2
+        )
+    )
+
+
+    yr2 = list((np.array(plt_list)[:,1].astype(float))) + list(reversed(np.array(plt_list)[:,1].astype(float) - np.array(plt_list)[:,2].astype(float)))
+
+    source5 = ColumnDataSource(
+        data=dict(
+            x=xr,
+            y= yr2,
+            label=list(np.array(plt_list)[:,0])*2
+        )
+    )
+
+
     fig2 = figure(title="Manufacturer and their average cost", tools=TOOLS,
        x_axis_label = "Manufacturer",
        y_axis_label = "Averag Price")
+    # fig2.circle(x='x', y='y' , source=source3)
+    fig2.patch(x='x', y='y', color="#99d8c9" , source=source4)
+    fig2.patch(x='x', y='y', color="#99d8c9" , source=source5)
     fig2.line(x='x' , y='y' , source=source3)
-    fig2.circle(x='x', y='y' , source=source3)
+    fig2.xgrid.grid_line_color = None
+    fig2.axis[0].major_label_text_font_size = "0pt"
+    fig2.axis.major_tick_line_color = None
+    fig2.axis[0].ticker.num_minor_ticks = 0
+    fig2.axis[1].ticker.num_minor_ticks = 0
+    fig2.outline_line_color = "white"
+    fig2.xaxis.axis_line_color = "white"
+    fig2.yaxis.axis_line_color = "white"
     hover2 =fig2.select(dict(type=HoverTool))
     hover2.tooltips = OrderedDict([
         ("label", "@label"),
