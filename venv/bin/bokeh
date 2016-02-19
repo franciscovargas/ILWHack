@@ -1,7 +1,0 @@
-#!/afs/inf.ed.ac.uk/user/s12/s1235260/ILWHack/venv/bin/python
-
-import sys
-
-from bokeh.command.bootstrap import main
-
-main(sys.argv)
