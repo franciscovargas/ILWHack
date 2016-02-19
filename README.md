@@ -15,5 +15,6 @@ After a succesfull installation run the project with the following commands:
      $ ./script.sh  # database migrations and set up
      $ python manage.py create_data_u
      $ python manage.py create_data_pur
+     $ export APP_SETTINGS="project.server.config.DevelopmentConfig"
      $ python manage.py runserver
 
